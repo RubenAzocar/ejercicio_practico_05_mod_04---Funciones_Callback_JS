@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio Práctico - Funciones Callback JS</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; background: #f9f9f9; }
+        h1 { color: #2c3e50; }
+        #output { background: #fff; border: 1px solid #ccc; padding: 1em; margin-top: 1em; min-height: 80px; }
+        button { padding: 0.5em 1em; font-size: 1em; margin-top: 1em; }
+    </style>
+</head>
+<body>
+    <h1>Ejercicio Práctico - Funciones Callback en JavaScript</h1>
+    <button id="iniciar-btn">Iniciar Ejercicio</button>
+    <div id="output"></div>
+    <script src="ejercicio_callbacks.js"></script>
+    <script>
+        // Redirigir console.log y console.error al div output
+        const outputDiv = document.getElementById('output');
+        function printMsg(msg, isError = false) {
+            const p = document.createElement('p');
+            p.textContent = msg;
+            p.style.color = isError ? 'red' : '#222';
+            outputDiv.appendChild(p);
+        }
+        console.log = (msg) => printMsg(msg);
+        console.error = (msg) => printMsg(msg, true);
+
+        document.getElementById('iniciar-btn').onclick = function() {
+            outputDiv.innerHTML = '';
+            validar_numero(function(exito, valor) {
+                if (exito) {
+                    console.log("Correcto: Usted ingresó el número " + valor);
+                    calcular_y_avisar_despues(valor, function(sumatoria) {
+                        console.log(`El valor de la sumatoria es ${sumatoria}. Este resultado se obtuvo hace 5 segundos.`);
+                        calcular_y_avisar_dependiendo(valor,
+                            function(num, res) {
+                                console.log(`Las sumatorias sucesivas de ${num} es ${res}`);
+                            },
+                            function(num, res) {
+                                console.error(`El número ${num} sobrepasa el objetivo de la función. Resultado obtenido: ${res}`);
+                            }
+                        );
+                    });
+                } else {
+                    console.error("Error: Usted ingresó caracteres incorrectos");
+                }
+            });
+        };
+    </script>
+</body>
+</html>
